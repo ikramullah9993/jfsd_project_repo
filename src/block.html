@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Selection</title>
+    <style>
+        .item {
+            border: 1px solid #ccc;
+            padding: 16px;
+            max-width: 300px;
+            text-align: center;
+        }
+        .item img {
+            max-width: 100px;
+        }
+        .description {
+            margin-top: 10px;
+        }
+        .price {
+            font-size: 20px;
+            color: green;
+        }
+        .add-to-cart {
+            margin-top: 10px;
+            background-color: yellow;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="item">
+    <img id="item-image" src="default-image.png" alt="Product Image">
+    <h3 id="item-name">Boult Audio UFO Truly Wireless</h3>
+    <p id="item-description" class="description">
+        48H Playtime, Built-in App Support, 45ms Low Latency...
+    </p>
+    <p id="item-rating" class="rating">⭐⭐⭐⭐ 7,934</p>
+    <p id="item-bought">5K+ bought in the past month</p>
+    <p class="price">
+        ₹<span id="item-price">1,099</span> <span class="mrp">M.R.P: ₹<span id="item-mrp">3,499</span> (69% off)</span>
+    </p>
+    <div class="add-to-cart" id="add-item">Add to cart</div>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="file-input" style="display: none;">
+
+<script>
+    // When "Add to cart" is clicked, open file explorer
+    document.getElementById('add-item').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+    });
+
+    // Handle file input
+    document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            // Dynamically update the product information based on file details
+            document.getElementById('item-name').textContent = file.name;
+            document.getElementById('item-description').textContent = `File size: ${Math.round(file.size / 1024)} KB`;
+            document.getElementById('item-image').src = URL.createObjectURL(file); // Preview file
+        }
+    });
+</script>
+
+</body>
+</html>
