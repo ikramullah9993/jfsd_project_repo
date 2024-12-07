@@ -1,0 +1,53 @@
+package com.example.demo.Controller;
+
+import com.example.demo.Classes.Culturalist;
+import com.example.demo.Service.CulturalistService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/culturalist")
+@CrossOrigin(origins = "http://localhost:3000")
+public class CulturalistController {
+
+    @Autowired
+    private CulturalistService culturalistService;
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerCulturalist(@RequestBody Culturalist culturalist) {
+        Culturalist savedCulturalist = culturalistService.registerCulturalist(culturalist);
+        return ResponseEntity.ok("Culturalist registered successfully with ID: " + savedCulturalist.getId());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> loginCulturalist(@RequestBody Culturalist culturalist) {
+        boolean isValid = culturalistService.validateCulturalist(culturalist.getGmail(), culturalist.getPassword());
+
+        Map<String, Object> response = new HashMap<>();
+        if (isValid) {
+            Culturalist loggedInCulturalist = culturalistService.findByGmail(culturalist.getGmail());
+            response.put("success", true);
+            response.put("culturalistName", loggedInCulturalist.getName());
+        } else {
+            response.put("success", false);
+            response.put("message", "Invalid credentials");
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    public List<Culturalist> getAllCulturalists() {
+        return culturalistService.getAllCulturalists();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteCulturalist(@PathVariable Long id) {
+        culturalistService.deleteCulturalist(id);
+    }
+}
